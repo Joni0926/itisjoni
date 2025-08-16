@@ -1,704 +1,333 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Soleil</title>
-    <!-- 引入像素风格字体 -->
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <style>
-        /* 基础样式：古早网页黑底+绿色像素风 */
-        body {
-            margin: 0;
-            padding: 20px;
-            background-color: #000;
-            font-family: 'Press Start 2P', 'Courier New', Courier, monospace;
-            color: #0f0; /* 绿色文字 */
-            letter-spacing: -0.5px;
-            line-height: 1.6;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Happy Birthday Soleil</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;padding:20px;background:#000;color:#0f0;font-family:'Press Start 2P','Courier New',Courier,monospace;letter-spacing:-0.5px;line-height:1.6}
+  #loading-screen{display:block;position:fixed;inset:0;background:#000;z-index:100}
+  .loading-text{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);font-size:4vw;animation:blink 1s step-end infinite}
+  @keyframes blink{50%{opacity:.5}}
+  .progress-container{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80%;max-width:300px;height:20px;border:2px solid #fff}
+  .progress-bar{width:0%;height:100%;background:#fff;transition:width 3s linear}
+  .note-box{display:none;max-width:600px;width:90%;margin:50px auto;padding:3vw;border:2px solid #fff;background:#000;box-shadow:0 0 0 2px #000,0 0 0 4px #fff}
+  .note-line{display:none;margin:15px 0;font-size:2.5vw;text-shadow:2px 2px 0 #000,-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;animation:pixelFadeIn .3s step-end}
+  .right-align{text-align:right}
+  .smaller-text{font-size:2vw}
+  .cat-pixel,.cake-pixel{display:none;margin:20px auto;text-align:center;font-size:1.5vw;line-height:1}
+  audio{width:100%;margin:15px 0;filter:hue-rotate(120deg) saturate(.7) contrast(1.2)}
+  .page{display:none}.page.active{display:block}
+  .note-box:active{transform:scale(.98)}
+  @media (max-width:600px){
+    .note-line{font-size:3vw;margin:12px 0}
+    .smaller-text{font-size:2.5vw}
+    .cat-pixel,.cake-pixel{font-size:2.5vw}
+    .loading-text{font-size:5vw}
+  }
+  @keyframes pixelFadeIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
 
-        /* 加载界面 */
-        #loading-screen {
-            display: block;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 100;
-        }
-
-        .loading-text {
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 4vw;
-            animation: blink 1s step-end infinite;
-        }
-
-        @keyframes blink {
-            50% { opacity: 0.5; }
-        }
-
-        /* 白色像素进度进度条 */
-        .progress-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            max-width: 300px;
-            height: 20px;
-            border: 2px solid #fff;
-        }
-
-        .progress-bar {
-            width: 0%;
-            height: 100%;
-            background-color: #fff;
-            transition: width 3s linear;
-        }
-
-        /* 白色像素线条便签框 */
-        .note-box {
-            display: none;
-            max-width: 600px;
-            width: 90%;
-            margin: 50px auto;
-            padding: 3vw;
-            border: 2px solid #fff;
-            background: #000;
-            box-shadow: 0 0 0 2px #000, 0 0 0 4px #fff;
-        }
-
-        /* 文字样式：逐行隐藏，点击浮现 */
-        .note-line {
-            display: none;
-            margin: 15px 0;
-            font-size: 2.5vw;
-            text-shadow: 2px 2px 0 #000, 
-                       -1px -1px 0 #000,  
-                        1px -1px 0 #000,  
-                       -1px 1px 0 #000,  
-                        1px 1px 0 #000;
-        }
-
-        /* 右侧对齐行 */
-        .right-align {
-            text-align: right;
-        }
-
-        /* 小一号字体 */
-        .smaller-text {
-            font-size: 2vw;
-        }
-
-        /* 猫像素图案（居中） */
-        .cat-pixel {
-            display: none;
-            margin: 15px auto;
-            text-align: center;
-            font-size: 1.5vw;
-            line-height: 1;
-            max-width: 50%;
-        }
-
-        /* 生日蛋糕像素图案（居中） */
-        .cake-pixel {
-            display: none;
-            margin: 20px auto;
-            text-align: center;
-            font-size: 1.5vw;
-            line-height: 1;
-        }
-
-        /* 音频控件样式 - 像素风格 */
-        audio {
-            width: 100%;
-            margin: 15px 0;
-            filter: hue-rotate(120deg) saturate(0.7) contrast(1.2);
-        }
-
-        /* 页面切换控制：仅当前页面显示 */
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        /* 像素化点击反馈 */
-        .note-box:active {
-            transform: scale(0.98);
-        }
-
-        /* 响应式调整 - 针对手机屏幕优化 */
-        @media (max-width: 600px) {
-            .note-line {
-                font-size: 3vw;
-                margin: 12px 0;
-            }
-            
-            .smaller-text {
-                font-size: 2.5vw;
-            }
-            
-            .cat-pixel, .cake-pixel {
-                font-size: 2.5vw;
-            }
-            
-            .loading-text {
-                font-size: 5vw;
-            }
-        }
-
-        /* 文字浮现动画 - 像素风格 */
-        @keyframes pixelFadeIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .note-line {
-            animation: pixelFadeIn 0.3s step-end;
-        }
-    </style>
+  /* 播放器行：默认隐藏，按规则出现 */
+  .player-line{display:none}
+</style>
 </head>
 <body>
-    <!-- 1. 加载界面 -->
-    <div id="loading-screen">
-        <div class="loading-text">loading...</div>
-        <div class="progress-container">
-            <div class="progress-bar" id="progress-bar"></div>
-        </div>
+  <!-- 1. 加载界面 -->
+  <div id="loading-screen">
+    <div class="loading-text">loading...</div>
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+  </div>
+
+  <!-- 2. 第一页 -->
+  <div class="page active" id="page1">
+    <div class="note-box" id="note1">
+      <div class="note-line">Dear Soleil,</div>
+      <div class="note-line">This is a little belated, but happy birthday to you!</div>
+      <div class="note-line"></div>
+      <div class="note-line">First off, congratulations on stepping into this brand-new chapter of your life.</div>
+      <div class="note-line"></div>
+      <div class="note-line">It's a world well worth exploring and embracing.</div>
+      <div class="note-line"></div>
+      <div class="note-line">Whether you're 18, 19, 20, or 30,</div>
+      <div class="note-line"></div>
+      <div class="note-line">your life is yours and yours alone.</div>
+      <div class="note-line"></div>
+      <div class="note-line">Your experiences are one of a kind—no one else has yours.</div>
+      <div class="note-line"></div>
+      <div class="note-line">I think your wishes are what make up your world.</div>
+      <div class="note-line"></div>
+      <div class="note-line">So here's to everything you can dream of coming true. I'm truly glad I got to know you.</div>
+      <div class="note-line smaller-text">P.S. More surprises are on the way.</div>
     </div>
+  </div>
 
-    <!-- 2. 第一页：生日祝福便签 -->
-    <div class="page active" id="page1">
-        <div class="note-box" id="note1">
-            <div class="note-line">Dear Soleil,</div>
-            <div class="note-line">This is a little belated, but happy birthday to you!</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">First off, congratulations on stepping into this brand-new chapter of your life.</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">It's a world well worth exploring and embracing.</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">Whether you're 18, 19, 20, or 30,</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">your life is yours and yours alone.</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">Your experiences are one of a kind—no one else has yours.</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">I think your wishes are what make up your world.</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">So here's to everything you can dream of coming true. I'm truly glad I got to know you.</div>
-            <div class="note-line smaller-text">P.S. More surprises are on the way.</div>
-        </div>
+  <!-- 3. 第二页：Intro（先显示到“...”，再点一下：出现播放器并开始播放） -->
+  <div class="page" id="page2">
+    <div class="note-box" id="note2">
+      <div class="note-line">Guess what I've prepared?</div>
+      <div class="note-line"></div>
+      <div class="note-line">You're probably wondering, "Is there more?"</div>
+      <div class="note-line"></div>
+      <div class="note-line">Well then,</div>
+      <div class="note-line">1</div>
+      <div class="note-line">2</div>
+      <div class="note-line">3</div>
+      <div class="note-line" id="intro-ellipsis">...</div>
+      <!-- 播放器行：按规则出现 -->
+      <div class="note-line player-line" id="intro-player-line">
+        <audio id="audio-intro" src="./audio/intro.mp3" controls preload="metadata" playsinline></audio>
+      </div>
+      <div class="note-line">Can you hear me?</div>
+      <div class="note-line">I've prepared a piece of music for you.</div>
+      <div class="note-line">Its name is "Intro" literally:D</div>
     </div>
+  </div>
 
-    <!-- 3. 第二页：Intro 音乐 -->
-    <div class="page" id="page2">
-        <div class="note-box" id="note2">
-            <div class="note-line">Guess what I've prepared?</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">You're probably wondering, "Is there more?"</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">Well then,</div>
-            <div class="note-line">1</div>
-            <div class="note-line">2</div>
-            <div class="note-line">3</div>
-            <div class="note-line">...</div>
-            <div class="note-line">
-                <audio id="audio-intro" src="./audio/intro.mp3" controls preload="metadata" playsinline>
-                    Your browser does not support the audio element.
-                 </audio>
-            </div>
-            <div class="note-line">Can you hear me?</div>
-            <div class="note-line">I've prepared a piece of music for you.</div>
-            <div class="note-line">Its name is "Intro" literally:D</div>
-        </div>
+  <!-- 4. 第三页：The Cats（按原逻辑显示与播放） -->
+  <div class="page" id="page3">
+    <div class="note-box" id="note3">
+      <div class="note-line">It's not over yet.</div>
+      <div class="note-line"></div>
+      <div class="note-line">This is the second piece, "The Cats".</div>
+      <div class="note-line" id="cats-audio-line">
+        <audio id="audio-cats" src="./audio/the-cats.mp3" controls preload="metadata" playsinline></audio>
+      </div>
+      <div class="note-line"></div>
+      <div class="cat-pixel" id="cat-pattern">
+        ■■■   ■■■   ■■■<br>
+        ■ ■   ■ ■   ■ ■<br>
+        ■■■   ■■■   ■■■<br>
+        ■ ■       ■ ■<br>
+        ■ ■       ■ ■
+      </div>
+      <div class="note-line"></div>
+      <div class="note-line">There are actually three cats in this piece of music.</div>
+      <div class="note-line">I'm not lying to you.</div>
+      <div class="note-line">(If you want to know, I'd be happy to tell you.)</div>
     </div>
+  </div>
 
-    <!-- 4. 第三页：The Cats 音乐 + 猫像素图 -->
-    <div class="page" id="page3">
-        <div class="note-box" id="note3">
-            <div class="note-line">It's not over yet.</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">This is the second piece, "The Cats".</div>
-            <div class="note-line">
-                <audio id="audio-cats" src="./audio/the-cats.mp3" controls preload="metadata" playsinline>
-                    Your browser does not support the audio element.
-                 </audio>
-            </div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <!-- 像素猫图案（线条组成，占便签框1/2内） -->
-            <div class="cat-pixel" id="cat-pattern">
-■■■   ■■■   ■■■<br>
-■ ■   ■ ■   ■ ■<br>
-■■■   ■■■   ■■■<br>
-■ ■       ■ ■<br>
-■ ■       ■ ■
-            </div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">There are actually three cats in this piece of music.</div>
-            <div class="note-line">I'm not lying to you.</div>
-            <div class="note-line">(If you want to know, I'd be happy to tell you.)</div>
-        </div>
+  <!-- 5. 第四页：Asa_Sun（所有文字出现完毕后，再显示播放器并开始播放） -->
+  <div class="page" id="page4">
+    <div class="note-box" id="note4">
+      <div class="note-line">The next one is "Asa & Sun".</div>
+      <div class="note-line"></div>
+      <div class="note-line">I really love this piece.</div>
+      <div class="note-line">It gives me the feeling of a bright autumn sky.</div>
+      <div class="note-line"></div>
+      <!-- 播放器行：等全部文字出现后再出现 -->
+      <div class="note-line player-line" id="asa-player-line">
+        <audio id="audio-asa" src="./audio/Asa_Sun.mp3" controls preload="metadata" playsinline></audio>
+      </div>
     </div>
+  </div>
 
-    <!-- 5. 第四页：Asa & Sun 音乐 -->
-    <div class="page" id="page4">
-        <div class="note-box" id="note4">
-            <div class="note-line">The next one is "Asa & Sun".</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">I really love this piece.</div>
-            <div class="note-line">It gives me the feeling of a bright autumn sky.</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">
-                <audio id="audio-asa" src="./audio/Asa_Sun.mp3" controls preload="metadata" playsinline>
-                    Your browser does not support the audio element.
-                 </audio>
-            </div>
-        </div>
+  <!-- 6. 第五页：outro（与“How do you like it?”同时出现，循环播放，无控件） -->
+  <div class="page" id="page5">
+    <div class="note-box" id="note5">
+      <div class="note-line" id="outro-first-line">How do you like it?</div>
+      <div class="note-line"></div>
+      <div class="note-line">It’s my first time making these.</div>
+      <div class="note-line">I couldn’t make them perfect, though.</div>
+      <div class="note-line">The process was quite challenging, but also really fun.</div>
+      <div class="note-line"></div>
+      <div class="note-line">I once took part in a project that didn’t work out.</div>
+      <div class="note-line">That always left me feeling a bit regretful.</div>
+      <div class="note-line"></div>
+      <div class="note-line">This time, I made these with a relaxed mindset.</div>
+      <div class="note-line">So, I hope you can enjoy them too.</div>
+      <div class="note-line"></div>
+      <div class="note-line">No matter what,</div>
+      <div class="note-line">Happy birthday, my friend.</div>
+      <div class="note-line right-align">J</div>
+      <div class="note-line"></div>
+      <div class="cake-pixel" id="cake-pattern">
+        ■       ■<br>
+        ■       ■<br>
+         ■■■■■<br>
+       ■■■■■■■■<br>
+      ■■■■■■■■■■<br>
+      </div>
+      <!-- 无控件、循环播放 -->
+      <audio id="audio-outro" src="./audio/outro.mp3" loop preload="metadata" playsinline></audio>
     </div>
+  </div>
 
-    <!-- 6. 第五页：结束语 + 蛋糕像素图 -->
-    <div class="page" id="page5">
-        <div class="note-box" id="note5">
-            <div class="note-line">How do you like it?</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">It’s my first time making these.</div>
-            <div class="note-line">I couldn’t make them perfect, though.</div>
-            <div class="note-line">The process was quite challenging, but also really fun.</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">I once took part in a project that didn’t work out.</div>
-            <div class="note-line">That always left me feeling a bit regretful.</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">This time, I made these with a relaxed mindset.</div>
-            <div class="note-line">So, I hope you can enjoy them too.</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">No matter what,</div>
-            <div class="note-line">Happy birthday, my friend.</div>
-            <div class="note-line right-align">J</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <!-- 生日蛋糕像素图案 -->
-            <div class="cake-pixel" id="cake-pattern">
-       ■       ■<br>
-       ■       ■<br>
-        ■■■■■<br>
-      ■■■■■■■■<br>
-     ■■■■■■■■■■<br>
-            </div>
-            <!-- 第五页背景音乐（不显示控件，点击到这一页后脚本触发播放） -->
-            <audio id="audio-outro" src="./audio/outro.mp3" loop preload="metadata" playsinline>
-                Your browser does not support the audio element.
-             </audio>
-        </div>
-    </div>
+<script>
+/* ========== 工具：音频淡出与互斥播放 ========== */
+const AUDIO_IDS = ['audio-intro','audio-cats','audio-asa','audio-outro'];
 
-    <script>
-        // 1. 加载进度条动画
-        window.onload = function() {
-            const progressBar = document.getElementById('progress-bar');
-            const loadingScreen = document.getElementById('loading-screen');
-            const note1 = document.getElementById('note1');
-            
-            // 模拟像素风格进度加载动画
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 2;
-                progressBar.style.width = `${progress}%`;
-                
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    // 加载完成后显示第一页便签
-                    setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                        note1.style.display = 'block';
-                        showNextLine('note1', 0); // 开始逐行显示文字
-                    }, 1000);
-                }
-            }, 100);
-        };
+/** 平滑减弱并暂停 */
+function fadeOut(audio, ms = 800) {
+  if (!audio || audio.paused) return;
+  const steps = Math.max(1, Math.floor(ms / 50));
+  const startVol = audio.volume;
+  let i = 0;
+  const timer = setInterval(() => {
+    i++;
+    const v = Math.max(0, startVol * (1 - i/steps));
+    audio.volume = v;
+    if (i >= steps || v <= 0.01) {
+      clearInterval(timer);
+      audio.pause();
+      audio.volume = 1; // 复位音量，便于下次播放
+    }
+  }, 50);
+}
 
-        // 2. 逐行显示文字：点击便签框显示下一行（单次点击）
-        let currentLineIndex = {}; // 记录每个便签的当前行数
-        let isProcessingClick = false; // 防止重复点击
-        
-        function showNextLine(noteId, startIndex = 0) {
-            // 清除之前的事件监听器，防止累积
-            const note = document.getElementById(noteId);
-            const newNote = note.cloneNode(true);
-            note.parentNode.replaceChild(newNote, note);
-            const freshNote = document.getElementById(noteId);
-            
-            const lines = freshNote.querySelectorAll('.note-line');
-            currentLineIndex[noteId] = startIndex || 0;
+/** 将除 exceptId 外的音频全部减弱 */
+function fadeOutAll(exceptId = null) {
+  AUDIO_IDS.forEach(id => {
+    if (id !== exceptId) {
+      const a = document.getElementById(id);
+      fadeOut(a);
+    }
+  });
+}
 
-            // 显示初始行
-            if (currentLineIndex[noteId] < lines.length) {
-                lines[currentLineIndex[noteId]].style.display = 'block';
-                currentLineIndex[noteId]++;
-            }
+/** 用于我们代码触发的播放（自动处理冲突与淡出） */
+function playAudio(audioId) {
+  const audio = document.getElementById(audioId);
+  if (!audio) return;
+  fadeOutAll(audioId);
+  audio.volume = 1;
+  audio.play().catch(err => console.warn('播放被阻止：', err?.message));
+}
 
-            // 点击便签显示下一行（单次点击处理）
-            const handleClick = function() {
-                if (isProcessingClick) return;
-                isProcessingClick = true;
-                
-                if (currentLineIndex[noteId] < lines.length) {
-                    lines[currentLineIndex[noteId]].style.display = 'block';
-                    
-                    // 第二页音乐：当计数到音频行前一行时，触发播放，提高移动端成功率
-                    if (noteId === 'note2' && currentLineIndex[noteId] === 8) {
-                        playAudio('audio-intro');
-                    }
+/** 用户手动点任意 <audio> 的播放键时，也做互斥与淡出 */
+document.addEventListener('play', (e) => {
+  const el = e.target;
+  if (el && el.tagName === 'AUDIO') {
+    fadeOutAll(el.id);
+  }
+}, true);
 
-                    // 第三页：显示猫图案（对应第6行后）
-                    if (noteId === 'note3' && currentLineIndex[noteId] === 6) {
-                        document.getElementById('cat-pattern').style.display = 'block';
-                    }
+/* ========== 初始化：加载进度 → 展示第一页 ========== */
+window.onload = function() {
+  const progressBar = document.getElementById('progress-bar');
+  const loadingScreen = document.getElementById('loading-screen');
+  const note1 = document.getElementById('note1');
 
-                    // 第三页音乐播放控制
-                    if (noteId === 'note3' && currentLineIndex[noteId] === 4) {
-                        playAudio('audio-cats');
-                    }
-                    
-                    // 第四页音乐播放控制
-                    if (noteId === 'note4' && currentLineIndex[noteId] === 5) {
-                        playAudio('audio-asa');
-                    }
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += 2;
+    progressBar.style.width = `${progress}%`;
+    if (progress >= 100) {
+      clearInterval(interval);
+      setTimeout(() => {
+        loadingScreen.style.display = 'none';
+        note1.style.display = 'block';
+        showNextLine('note1', 0);
+      }, 600);
+    }
+  }, 100);
+};
 
-                    currentLineIndex[noteId]++;
+/* ========== 逐行显示与页面切换（按你的触发规则改造） ========== */
+let currentLineIndex = {};
+let isProcessingClick = false;
+/** 记录某些页是否已展示过“播放器阶段”，用于拦截直接翻页 */
+const playerShown = { note2:false, note4:false };
 
-                    // 所有行显示完后，准备页面切换
-                    if (currentLineIndex[noteId] >= lines.length) {
-                        freshNote.removeEventListener('click', handleClick);
-                        handlePageSwitch(noteId);
-                    }
-                }
-                
-                // 短暂延迟后允许再次点击
-                setTimeout(() => {
-                    isProcessingClick = false;
-                }, 300);
-            };
+function showNextLine(noteId, startIndex = 0) {
+  // 重新绑定 click（避免重复监听累积）
+  const note = document.getElementById(noteId);
+  const newNote = note.cloneNode(true);
+  note.parentNode.replaceChild(newNote, note);
+  const freshNote = document.getElementById(noteId);
 
-            freshNote.addEventListener('click', handleClick);
-        }
+  // 规则：不把“播放器行（.player-line）”算入逐字显示的文本行
+  const lines = freshNote.querySelectorAll('.note-line:not(.player-line)');
+  currentLineIndex[noteId] = startIndex || 0;
 
-        // 3. 页面切换逻辑
-        function handlePageSwitch(currentNoteId) {
-            // 页面顺序：page1 → page2 → page3 → page4 → page5
-            const pageOrder = ['page1', 'page2', 'page3', 'page4', 'page5'];
-            const currentPageId = currentNoteId.replace('note', 'page');
-            const currentIndex = pageOrder.indexOf(currentPageId);
+  // 初始显示第一行
+  if (currentLineIndex[noteId] < lines.length) {
+    lines[currentLineIndex[noteId]].style.display = 'block';
+    // page5：第一行出现同时开始播放 outro（无控件）
+    if (noteId === 'note5' && currentLineIndex[noteId] === 0) {
+      playAudio('audio-outro');
+    }
+    currentLineIndex[noteId]++;
+  }
 
-            if (currentIndex === -1) {
-                console.error('无效的页面ID:', currentPageId);
-                return;
-            }
+  const handleClick = function() {
+    if (isProcessingClick) return;
+    isProcessingClick = true;
 
-            // 最后一页（page5）处理
-            if (currentPageId === 'page5') {
-                // 播放第五页背景音乐
-                playAudio('audio-outro');
-                setTimeout(() => {
-                    document.getElementById('cake-pattern').style.display = 'block';
-                }, 800);
-                return;
-            }
+    const idx = currentLineIndex[noteId];
 
-            // 计算下一页并切换
-            const nextIndex = currentIndex + 1;
-            if (nextIndex >= pageOrder.length) return;
+    if (idx < lines.length) {
+      // 显示下一行
+      lines[idx].style.display = 'block';
 
-            const nextPageId = pageOrder[nextIndex];
-            const nextNoteId = nextPageId.replace('page', 'note');
+      // note3：当出现含有 #audio-cats 的那一行时，开始播放
+      if (noteId === 'note3') {
+        const maybeCats = lines[idx].querySelector('#audio-cats');
+        if (maybeCats) playAudio('audio-cats');
+        // 显示猫图案：在音频行之后的下一次点击后出现
+        const catPattern = document.getElementById('cat-pattern');
+        if (catPattern && idx >= 4) catPattern.style.display = 'block';
+      }
 
-            const nextPage = document.getElementById(nextPageId);
-            const nextNote = document.getElementById(nextNoteId);
-            if (!nextPage || !nextNote) {
-                console.error('下一页元素不存在:', nextPageId, nextNoteId);
-                return;
-            }
+      currentLineIndex[noteId]++;
+    } else {
+      // 已显示完“文本行”，这里根据不同页面的规则处理“播放器阶段”或翻页
+      if (noteId === 'note2' && !playerShown[noteId]) {
+        // intro：在“...”之后的第一次点击 —— 显示播放器并开始播放
+        document.getElementById('intro-player-line').style.display = 'block';
+        playAudio('audio-intro');
+        playerShown[noteId] = true; // 本次点击只做播放器，不翻页
+      } else if (noteId === 'note4' && !playerShown[noteId]) {
+        // Asa_Sun：等全部文字出现后，再显示播放器并开始播放
+        document.getElementById('asa-player-line').style.display = 'block';
+        playAudio('audio-asa');
+        playerShown[noteId] = true; // 同样先停留一拍
+      } else {
+        // 进入页面切换：切换前对上一页音乐做减弱处理
+        handlePageSwitch(noteId);
+      }
+    }
 
-            document.querySelector('.page.active').classList.remove('active');
-            nextPage.classList.add('active');
+    setTimeout(() => { isProcessingClick = false; }, 250);
+  };
 
-            nextNote.style.display = 'block';
-            showNextLine(nextNoteId, 0);
+  freshNote.addEventListener('click', handleClick);
+}
 
-            // （保留原先的自动播放，但已增加点击触发版本以避免被拦截）
-            if (nextPageId === 'page2') {
-                setTimeout(() => playAudio('audio-intro'), 500);
-            }
-        }
+function handlePageSwitch(currentNoteId) {
+  const pageOrder = ['page1','page2','page3','page4','page5'];
+  const currentPageId = currentNoteId.replace('note','page');
+  const currentIndex = pageOrder.indexOf(currentPageId);
+  if (currentIndex === -1) return;
 
-        // 音乐播放函数（带错误处理）
-        function playAudio(audioId) {
-            const audio = document.getElementById(audioId);
-            if (audio) {
-                audio.play().catch(error => {
-                    console.error(`音乐播放失败: ${error.message}`);
-                });
-            }
-        }
-    </script>
-</body>
-</html>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">Well then,</div>
-            <div class="note-line">1</div>
-            <div class="note-line">2</div>
-            <div class="note-line">3</div>
-            <div class="note-line">...</div>
-            <div class="note-line">
-                <audio id="audio-intro" src="intro.mp3" controls>
-                    Your browser does not support the audio element.
-                 </audio>
-            </div>
-            <div class="note-line">Can you hear me?</div>
-            <div class="note-line">I've prepared a piece of music for you.</div>
-            <div class="note-line">Its name is "Intro" literally:D</div>
-        </div>
-    </div>
+  // 切页前：无条件把所有音频做一次减弱，避免冲突
+  fadeOutAll(null);
 
-    <!-- 4. 第三页：The Cats 音乐 + 猫像素图 -->
-    <div class="page" id="page3">
-        <div class="note-box" id="note3">
-            <div class="note-line">It's not over yet.</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">This is the second piece, "The Cats".</div>
-            <div class="note-line">
-                <audio id="audio-cats" src="the-cats.mp3" controls>
-                    Your browser does not support the audio element.
-                 </audio>
-            </div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <!-- 像素猫图案（线条组成，占便签框1/2内） -->
-            <div class="cat-pixel" id="cat-pattern">
-■■■   ■■■   ■■■<br>
-■ ■   ■ ■   ■ ■<br>
-■■■   ■■■   ■■■<br>
-■ ■       ■ ■<br>
-■ ■       ■ ■
-            </div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">There are actually three cats in this piece of music.</div>
-            <div class="note-line">I'm not lying to you.</div>
-            <div class="note-line">(If you want to know, I'd be happy to tell you.)</div>
-        </div>
-    </div>
+  // 最后一页不再切
+  if (currentPageId === 'page5') {
+    setTimeout(() => {
+      const cake = document.getElementById('cake-pattern');
+      if (cake) cake.style.display = 'block';
+    }, 800);
+    return;
+  }
 
-    <!-- 5. 第四页：Asa & Sun 音乐 -->
-    <div class="page" id="page4">
-        <div class="note-box" id="note4">
-            <div class="note-line">The next one is "Asa & Sun".</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">I really love this piece.</div>
-            <div class="note-line">It gives me the feeling of a bright autumn sky.</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">
-                <audio id="audio-asa" src="Asa_Sun.mp3" controls>
-                    Your browser does not support the audio element.
-                 </audio>
-            </div>
-        </div>
-    </div>
+  const nextIndex = currentIndex + 1;
+  const nextPageId = pageOrder[nextIndex];
+  const nextNoteId = nextPageId.replace('page','note');
 
-    <!-- 6. 第五页：结束语 + 蛋糕像素图 -->
-    <div class="page" id="page5">
-        <div class="note-box" id="note5">
-            <div class="note-line">How do you like it?</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">It’s my first time making these.</div>
-            <div class="note-line">I couldn’t make them perfect, though.</div>
-            <div class="note-line">The process was quite challenging, but also really fun.</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">I once took part in a project that didn’t work out.</div>
-            <div class="note-line">That always left me feeling a bit regretful.</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">This time, I made these with a relaxed mindset.</div>
-            <div class="note-line">So, I hope you can enjoy them too.</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <div class="note-line">No matter what,</div>
-            <div class="note-line">Happy birthday, my friend.</div>
-            <div class="note-line right-align">J</div>
-            <div class="note-line"></div> <!-- 空行 -->
-            <!-- 生日蛋糕像素图案 -->
-            <div class="cake-pixel" id="cake-pattern">
-       ■       ■<br>
-       ■       ■<br>
-        ■■■■■<br>
-      ■■■■■■■■<br>
-     ■■■■■■■■■■<br>
-            </div>
-            <!-- 第五页背景音乐 -->
-            <audio id="audio-outro" src="outro.mp3" loop>
-                Your browser does not support the audio element.
-             </audio>
-        </div>
-    </div>
+  const nextPage = document.getElementById(nextPageId);
+  const nextNote = document.getElementById(nextNoteId);
+  if (!nextPage || !nextNote) return;
 
-    <script>
-        // 1. 加载进度条动画
-        window.onload = function() {
-            const progressBar = document.getElementById('progress-bar');
-            const loadingScreen = document.getElementById('loading-screen');
-            const note1 = document.getElementById('note1');
-            
-            // 模拟像素风格进度加载动画
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 2;
-                progressBar.style.width = `${progress}%`;
-                
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    // 加载完成后显示第一页便签
-                    setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                        note1.style.display = 'block';
-                        showNextLine('note1', 0); // 开始逐行显示文字
-                    }, 1000);
-                }
-            }, 100);
-        };
+  document.querySelector('.page.active').classList.remove('active');
+  nextPage.classList.add('active');
 
-        // 2. 逐行显示文字：点击便签框显示下一行（单次点击）
-        let currentLineIndex = {}; // 记录每个便签的当前行数
-        let isProcessingClick = false; // 防止重复点击
-        
-        function showNextLine(noteId, startIndex = 0) {
-            // 清除之前的事件监听器，防止累积
-            const note = document.getElementById(noteId);
-            const newNote = note.cloneNode(true);
-            note.parentNode.replaceChild(newNote, note);
-            const freshNote = document.getElementById(noteId);
-            
-            const lines = freshNote.querySelectorAll('.note-line');
-            currentLineIndex[noteId] = startIndex || 0;
-
-            // 显示初始行
-            if (currentLineIndex[noteId] < lines.length) {
-                lines[currentLineIndex[noteId]].style.display = 'block';
-                currentLineIndex[noteId]++;
-            }
-
-            // 点击便签显示下一行（单次点击处理）
-            const handleClick = function() {
-                if (isProcessingClick) return;
-                isProcessingClick = true;
-                
-                if (currentLineIndex[noteId] < lines.length) {
-                    lines[currentLineIndex[noteId]].style.display = 'block';
-                    
-                    // 第三页：显示猫图案（对应第6行后）
-                    if (noteId === 'note3' && currentLineIndex[noteId] === 6) {
-                        document.getElementById('cat-pattern').style.display = 'block';
-                    }
-
-                    // 第三页音乐播放控制：点击特定行播放音乐
-                    if (noteId === 'note3' && currentLineIndex[noteId] === 4) {
-                        playAudio('audio-cats');
-                    }
-                    
-                    // 第四页音乐播放控制：点击特定行播放音乐
-                    if (noteId === 'note4' && currentLineIndex[noteId] === 5) {
-                        playAudio('audio-asa');
-                    }
-
-                    currentLineIndex[noteId]++;
-
-                    // 所有行显示完后，准备页面切换
-                    if (currentLineIndex[noteId] >= lines.length) {
-                        freshNote.removeEventListener('click', handleClick);
-                        handlePageSwitch(noteId);
-                    }
-                }
-                
-                // 短暂延迟后允许再次点击
-                setTimeout(() => {
-                    isProcessingClick = false;
-                }, 300);
-            };
-
-            freshNote.addEventListener('click', handleClick);
-        }
-
-        // 3. 页面切换逻辑 - 完全重写以确保可靠性
-        function handlePageSwitch(currentNoteId) {
-            // 页面顺序：page1 → page2 → page3 → page4 → page5
-            const pageOrder = ['page1', 'page2', 'page3', 'page4', 'page5'];
-            const currentPageId = currentNoteId.replace('note', 'page');
-            const currentIndex = pageOrder.indexOf(currentPageId);
-
-            // 验证当前页面索引
-            if (currentIndex === -1) {
-                console.error('无效的页面ID:', currentPageId);
-                return;
-            }
-
-            // 最后一页（page5）处理
-            if (currentPageId === 'page5') {
-                // 播放第五页背景音乐
-                playAudio('audio-outro');
-                
-                setTimeout(() => {
-                    document.getElementById('cake-pattern').style.display = 'block';
-                }, 800);
-                return;
-            }
-
-            // 计算下一页索引并验证
-            const nextIndex = currentIndex + 1;
-            if (nextIndex >= pageOrder.length) {
-                console.error('已到达最后一页');
-                return;
-            }
-
-            // 获取下一页信息
-            const nextPageId = pageOrder[nextIndex];
-            const nextNoteId = nextPageId.replace('page', 'note');
-
-            // 验证下一页元素存在
-            const nextPage = document.getElementById(nextPageId);
-            const nextNote = document.getElementById(nextNoteId);
-            if (!nextPage || !nextNote) {
-                console.error('下一页元素不存在:', nextPageId, nextNoteId);
-                return;
-            }
-
-            // 切换页面显示状态
-            document.querySelector('.page.active').classList.remove('active');
-            nextPage.classList.add('active');
-
-            // 显示下一页便签，并开始逐行浮现文字
-            nextNote.style.display = 'block';
-            showNextLine(nextNoteId, 0);
-
-            // 第二页音乐自动播放
-            if (nextPageId === 'page2') {
-                setTimeout(() => {
-                    playAudio('audio-intro');
-                }, 500);
-            }
-        }
-
-        // 音乐播放函数（带错误处理）
-        function playAudio(audioId) {
-            const audio = document.getElementById(audioId);
-            if (audio) {
-                audio.play().catch(error => {
-                    console.error(`音乐播放失败: ${error.message}`);
-                });
-            }
-        }
-    </script>
+  nextNote.style.display = 'block';
+  showNextLine(nextNoteId, 0);
+}
+</script>
 </body>
 </html>
 
